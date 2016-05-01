@@ -53,6 +53,8 @@
     <Compile Include="Array.fsi" />
     <Compile Include="Array.fs" />
     <Compile Include="Tuple.fs" />
+    <Compile Include="Map.fsi" />
+    <Compile Include="Map.fs" />
   </ItemGroup>
   <PropertyGroup Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')">
     <FSharpTargetsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets</FSharpTargetsPath>
