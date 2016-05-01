@@ -23,19 +23,19 @@ module Update =
   let (>=>) a2bA b2cA a = a2bA a >>= b2cA
   let sequenceI length iter ofArray x2yF xs =
     let ys = Array.zeroCreate ^ length xs
-    let mutable i = 0
+    let i = ref 0
     xs
     |> iter (x2yF >> function
         | Over y ->
           match ys with
            | null -> ()
            | ys ->
-             let j = i
+             let j = !i
              if 0 <= j then
                ys.[j] <- y
-               i <- j + 1
-        | View -> i <- -1)
-    if i = ys.Length then Over ^ ofArray ys else View
+               i := j + 1
+        | View -> i := -1)
+    if !i = ys.Length then Over ^ ofArray ys else View
 
 type Optic<'s, 't, 'a, 'b> = ('a -> Update<'b>) -> 's -> Update<'t>
 type Optic<'s, 'a> = Optic<'s, 's, 'a, 'a>
