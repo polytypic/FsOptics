@@ -54,51 +54,56 @@ module Example1 =
 
 module Example2 =
   type Node<'k, 'v> =
-    {k: 'k
-     v: 'v
-     lt: BST<'k, 'v>
-     gt: BST<'k, 'v>}
+    {key: 'k
+     value: 'v
+     smaller: BST<'k, 'v>
+     greater: BST<'k, 'v>}
   and BST<'k, 'v> = option<Node<'k, 'v>>
 
   module Node =
-    let kL  U n = U n.k  </> fun x -> {n with  k=x}
-    let vL  U n = U n.v  </> fun x -> {n with  v=x}
-    let ltL U n = U n.lt </> fun x -> {n with lt=x}
-    let gtL U n = U n.gt </> fun x -> {n with gt=x}
+    let keyL     U r = U r.key     </> fun x -> {r with     key=x}
+    let valueL   U r = U r.value   </> fun x -> {r with   value=x}
+    let smallerL U r = U r.smaller </> fun x -> {r with smaller=x}
+    let greaterL U r = U r.greater </> fun x -> {r with greater=x}
 
   module BST =
-    let rec vT x2yF = function
+    let rec valuesT U = function
       | None -> result None
-      | Some n ->
-        fun v lt gt -> Some {k=n.k; v=v; lt=lt; gt=gt}
-        <&> x2yF n.v
-        <*> vT x2yF n.lt
-        <*> vT x2yF n.gt
+      | Some node ->
+            fun value smaller greater ->
+              Some {key=node.key; value=value; smaller=smaller; greater=greater}
+        <&> U node.value
+        <*> valuesT U node.smaller
+        <*> valuesT U node.greater
 
-    let rec searchL k =
+    let rec nodeL key =
       choose ^ function
-       | Some n when k <> n.k ->
-         ofPrism' (if k < n.k then Node.ltL else Node.gtL) << searchL k
+       | Some node when key <> node.key ->
+            ofPrism' ^ if key < node.key then Node.smallerL else Node.greaterL
+         << nodeL key
        | _ -> id
 
-    let valueOfL k =
-         searchL k
-      << ofTotal *< function {lt = None; gt = n} | {lt = n; gt = None} -> n
-                           | {lt = Some lt; gt = Some gt} ->
-                             set <| searchL lt.k <| Some lt <| Some gt
-                 *< fun v -> {k=k; v=v; lt=None; gt=None}
-                 *< Node.vL
+    let valueL key =
+         nodeL key
+      << ofTotal *< function {smaller = None; greater = node}
+                           | {smaller = node; greater = None} ->
+                             node
+                           | node ->
+                             set (nodeL key) node.smaller node.greater
+                 *< fun value ->
+                      {key=key; value=value; smaller=None; greater=None}
+                 *< Node.valueL
 
   let tree =
     [3,"a"; 1,"b"; 4,"c"; 1,"d"; 5,"e"; 9,"f"; 2,"g"]
-    |> List.fold *< fun t (k, v) -> set <| BST.valueOfL k <| Some v <| t
+    |> List.fold *< fun t (k, v) -> set <| BST.valueL k <| Some v <| t
                  *< None
 
   let run () =
     printfn "%A" tree
 
     tree
-    |> remove ^ BST.valueOfL 1
+    |> remove ^ BST.valueL 1
     |> printfn "%A"
 
     tree
