@@ -2,8 +2,6 @@
 
 #r "FsOptics.dll"
 
-#time "on"
-
 let inline constant x _ = x
 let inline ( ^ ) f = f
 let inline ( *< ) f = f
