@@ -1,0 +1,32 @@
+type
+        file
+id
+        FsOptics
+version
+        0.1.0
+summary
+        Lenses and Traversals for F#.
+authors
+        Vesa Karvonen
+owners
+        Vesa Karvonen
+licenseUrl
+        https://github.com/polytypic/FsOptics/blob/master/LICENSE.md
+projectUrl
+        https://github.com/polytypic/FsOptics
+requireLicenseAcceptance
+        false
+description
+        Lenses and Traversals for F#.
+releaseNotes
+        This is an experimental version of FsOptics and is not recommended for
+        production use.
+copyright
+        © Vesa Karvonen
+tags
+        F# fsharp lens traversal
+dependencies
+        FSharp.Core >= 3.1.2.5
+files
+        Libs/FsOptics/bin/Release/FsOptics.dll ==> lib/net45
+        Libs/FsOptics/bin/Release/FsOptics.XML ==> lib/net45

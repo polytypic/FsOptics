@@ -1,0 +1,10 @@
+*.nupkg
+*.suo
+*.userprefs
+*~
+.\#*
+.paket/paket.exe
+\#*\#
+bin
+obj
+packages

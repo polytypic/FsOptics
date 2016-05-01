@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{E0CB3280-F8DB-4D77-970B-D251AEC708E3}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{68FE7434-7992-4BE0-8BAC-C4477DC37AC6}"
+EndProject
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "FsOptics", "Libs\FsOptics\FsOptics.fsproj", "{C00E067E-C8C7-4D5E-B70E-CD803F913EE4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root", "Root", "{E1B1E645-CF6F-476B-ACBC-97743902A834}"
+	ProjectSection(SolutionItems) = preProject
+		FsOptics.fsx = FsOptics.fsx
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C00E067E-C8C7-4D5E-B70E-CD803F913EE4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C00E067E-C8C7-4D5E-B70E-CD803F913EE4}.Debug|x86.Build.0 = Debug|Any CPU
+		{C00E067E-C8C7-4D5E-B70E-CD803F913EE4}.Release|x86.ActiveCfg = Release|Any CPU
+		{C00E067E-C8C7-4D5E-B70E-CD803F913EE4}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C00E067E-C8C7-4D5E-B70E-CD803F913EE4} = {68FE7434-7992-4BE0-8BAC-C4477DC37AC6}
+	EndGlobalSection
+EndGlobal
