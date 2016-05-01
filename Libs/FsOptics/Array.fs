@@ -3,10 +3,10 @@
 module Array =
   let elemsT U = sequenceI Array.length Array.iter id U
 
-  let appendO U (xs: 'a []) =
+  let appendL U (xs: 'a []) =
     U (None: option<'a>) </> fun xO -> Array.append xs ^ Option.toArray xO
 
-  let indexO i U xs =
+  let indexL i U xs =
     if i < 0 then failwithf "Invalid index: %d" i
     let n = Array.length xs
     U ^ if i < n then Some xs.[i] else None
@@ -18,8 +18,8 @@ module Array =
           else
             xs
 
-  let inline findO p =
+  let inline findL p =
        Array.tryFindIndex p
-    >> Option.map indexO
-    >> Option.getOr appendO
+    >> Option.map indexL
+    >> Option.getOr appendL
     |> choose

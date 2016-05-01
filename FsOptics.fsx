@@ -11,20 +11,20 @@ open FsOptics
 module Example1 =
   type Text =
     {language: string; text: string}
-    static member languageO U r = U r.language </> fun x -> {r with language=x}
-    static member textO     U r = U r.text     </> fun x -> {r with     text=x}
+    static member languageL U r = U r.language </> fun x -> {r with language=x}
+    static member textL     U r = U r.text     </> fun x -> {r with     text=x}
 
   type Data =
     {contents: array<Text>}
-    static member contentsO U r = U r.contents </> fun x -> {r with contents=x}
+    static member contentsL U r = U r.contents </> fun x -> {r with contents=x}
 
   let textIn language =
-       Data.contentsO
-    << normalize ^ Array.sortBy ^ view Text.languageO
-    << Array.findO (view Text.languageO >> (=) language)
+       Data.contentsL
+    << normalize ^ Array.sortBy ^ view Text.languageL
+    << Array.findL (view Text.languageL >> (=) language)
     << ofTotal *< constant None
                *< fun text -> {language = language; text = text}
-               *< Text.textO
+               *< Text.textL
 
   let data = {contents = [|{language = "en"; text = "Title" }
                            {language = "sv"; text = "Rubrik"}|]}
@@ -61,10 +61,10 @@ module Example2 =
   and BST<'k, 'v> = option<Node<'k, 'v>>
 
   module Node =
-    let kO  U n = U n.k  </> fun x -> {n with  k=x}
-    let vO  U n = U n.v  </> fun x -> {n with  v=x}
-    let ltO U n = U n.lt </> fun x -> {n with lt=x}
-    let gtO U n = U n.gt </> fun x -> {n with gt=x}
+    let kL  U n = U n.k  </> fun x -> {n with  k=x}
+    let vL  U n = U n.v  </> fun x -> {n with  v=x}
+    let ltL U n = U n.lt </> fun x -> {n with lt=x}
+    let gtL U n = U n.gt </> fun x -> {n with gt=x}
 
   module BST =
     let rec vT x2yF = function
@@ -75,30 +75,30 @@ module Example2 =
         <*> vT x2yF n.lt
         <*> vT x2yF n.gt
 
-    let rec searchO k =
+    let rec searchL k =
       choose ^ function
        | Some n when k <> n.k ->
-         ofPrism' (if k < n.k then Node.ltO else Node.gtO) << searchO k
+         ofPrism' (if k < n.k then Node.ltL else Node.gtL) << searchL k
        | _ -> id
 
-    let valueOfO k =
-         searchO k
+    let valueOfL k =
+         searchL k
       << ofTotal *< function {lt = None; gt = n} | {lt = n; gt = None} -> n
                            | {lt = Some lt; gt = Some gt} ->
-                             set <| searchO lt.k <| Some lt <| Some gt
+                             set <| searchL lt.k <| Some lt <| Some gt
                  *< fun v -> {k=k; v=v; lt=None; gt=None}
-                 *< Node.vO
+                 *< Node.vL
 
   let tree =
     [3,"a"; 1,"b"; 4,"c"; 1,"d"; 5,"e"; 9,"f"; 2,"g"]
-    |> List.fold *< fun t (k, v) -> set <| BST.valueOfO k <| Some v <| t
+    |> List.fold *< fun t (k, v) -> set <| BST.valueOfL k <| Some v <| t
                  *< None
 
   let run () =
     printfn "%A" tree
 
     tree
-    |> remove ^ BST.valueOfO 1
+    |> remove ^ BST.valueOfL 1
     |> printfn "%A"
 
     tree
@@ -112,5 +112,6 @@ module Example2 =
 module Example3 =
   let run () =
     (((1, "a", false), (2, "b", true)), [(3, 1.0); (15, 2.0)])
-    |> set ((_1 << (_1 <=> _2) << _1) <=> (_2 << List.elemsT << _1)) "lol"
+    |> set ((item1 << (item1 <=> item2) << item1) <=>
+            (item2 << List.elemsT << item1)) "lol"
     |> printfn "%A"
