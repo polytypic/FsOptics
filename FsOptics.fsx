@@ -107,11 +107,11 @@ module Example2 =
     |> printfn "%A"
 
     tree
-    |> over BST.vT ^ fun v -> v + v
+    |> over BST.valuesT ^ fun v -> v + v
     |> printfn "%A"
 
     tree
-    |> foldOf BST.vT (+) ""
+    |> foldOf BST.valuesT (+) ""
     |> printfn "%A"
 
 module Example3 =
