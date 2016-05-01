@@ -43,10 +43,10 @@ type I7 = I7 with
 
 [<AutoOpen>]
 module Tuple =
-  let inline item1 U S = U ? (I1) <- S
-  let inline item2 U S = U ? (I2) <- S
-  let inline item3 U S = U ? (I3) <- S
-  let inline item4 U S = U ? (I4) <- S
-  let inline item5 U S = U ? (I5) <- S
-  let inline item6 U S = U ? (I6) <- S
-  let inline item7 U S = U ? (I7) <- S
+  let inline item1 U s = U ? (I1) <- s
+  let inline item2 U s = U ? (I2) <- s
+  let inline item3 U s = U ? (I3) <- s
+  let inline item4 U s = U ? (I4) <- s
+  let inline item5 U s = U ? (I5) <- s
+  let inline item6 U s = U ? (I6) <- s
+  let inline item7 U s = U ? (I7) <- s
