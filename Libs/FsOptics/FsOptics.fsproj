@@ -53,6 +53,8 @@
     <Compile Include="Array.fsi" />
     <Compile Include="Array.fs" />
     <Compile Include="Tuple.fs" />
+    <Compile Include="Option.fsi" />
+    <Compile Include="Option.fs" />
     <Compile Include="Map.fsi" />
     <Compile Include="Map.fs" />
   </ItemGroup>
