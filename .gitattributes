@@ -1,0 +1,3 @@
+*.fsproj    eol=crlf
+*.sh        eol=lf
+*.sln       eol=crlf
