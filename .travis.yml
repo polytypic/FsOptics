@@ -1,0 +1,12 @@
+language: csharp
+
+sudo: false
+
+mono:
+ - latest
+
+notifications:
+  email: false
+
+script:
+  - ./build.sh
