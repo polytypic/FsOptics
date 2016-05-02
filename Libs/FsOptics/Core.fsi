@@ -52,12 +52,12 @@ module Optic =
 
   val defaults: 's -> Optic<option<'s>, option<'s>> when 's: equality
 
-  val ofPrism: insert:      ('b -> option<'t>)
-            -> prism: Optic<       's,         't,  option<'a>, 'b>
-            ->        Optic<option<'s>, option<'t>, option<'a>, 'b>
-
-  val ofPrism': prism: Optic<       's,         't,  option<'a>, 'b>
+  val ofPrism': insert:           ('b -> option<'t>)
+             -> prism: Optic<       's,         't,  option<'a>, 'b>
              ->        Optic<option<'s>, option<'t>, option<'a>, 'b>
+
+  val ofPrism: prism: Optic<       's,         't,  option<'a>, 'b>
+            ->        Optic<option<'s>, option<'t>, option<'a>, 'b>
 
   val ofTotal: remove:          ('s -> option<'t>)
             -> insert:                 ('b -> 't)

@@ -79,7 +79,7 @@ module Example2 =
     let rec nodeL key =
       choose ^ function
        | Some node when key <> node.key ->
-            ofPrism' ^ if key < node.key then Node.smallerL else Node.greaterL
+            ofPrism ^ if key < node.key then Node.smallerL else Node.greaterL
          << nodeL key
        | _ -> id
 
@@ -119,4 +119,10 @@ module Example3 =
     (((1, "a", false), (2, "b", true)), [(3, 1.0); (15, 2.0)])
     |> set ((item1 << (item1 <=> item2) << item1) <=>
             (item2 << List.elemsT << item1)) "lol"
+    |> printfn "%A"
+
+    Choice2Of3 [|Some "a"|]
+    |> view (choice2
+          << ofPrism ^ Array.indexL 0
+          << ofPrism ^ Option.valueL)
     |> printfn "%A"

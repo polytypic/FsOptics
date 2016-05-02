@@ -83,11 +83,11 @@ module Optic =
 
   let defaults out = replace None ^ Some out
 
-  let ofPrism b2tO l U = function
+  let ofPrism' b2tO l U = function
     | None -> U None </> b2tO
     | Some s -> s |> flip ^ set l >> Some <&> U ^ view l s
 
-  let ofPrism' l = ofPrism <| constant None <| l
+  let ofPrism l = ofPrism' <| constant None <| l
 
   let ofTotal s2tO b2t l U = function
     | None -> U ^ None </> Option.map b2t
