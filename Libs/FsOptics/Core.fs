@@ -75,8 +75,8 @@ module Optic =
 
   let (<=>) (a: Optic<_,_,_,_>) b U = a U >=> b U
 
-  let some a : Optic<_, _, option<_>, _> = fun U s -> U ^ Some a </> constant s
-  let none   : Optic<_, _, option<_>, _> = fun U s -> U   None   </> constant s
+  let inline some C a U = U ^ Some a </> C
+  let inline none C c U = U ^ None   </> constant ^ C c
 
   let (<|>) aP bP =
     choose ^ fun s -> if Option.isSome ^ view aP s then aP else bP
