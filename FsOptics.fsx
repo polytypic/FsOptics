@@ -12,7 +12,7 @@ module Example1 =
   type Text =
     {language: string; text: string}
     static member languageL U r = U r.language </> fun x -> {r with language=x}
-    static member textL     U r = U r.text     </> fun x -> {r with     text=x}
+    static member     textL U r = U r.text     </> fun x -> {r with     text=x}
 
   type Data =
     {contents: array<Text>}
@@ -61,8 +61,8 @@ module Example2 =
   and BST<'k, 'v> = option<Node<'k, 'v>>
 
   module Node =
-    let keyL     U r = U r.key     </> fun x -> {r with     key=x}
-    let valueL   U r = U r.value   </> fun x -> {r with   value=x}
+    let     keyL U r = U r.key     </> fun x -> {r with     key=x}
+    let   valueL U r = U r.value   </> fun x -> {r with   value=x}
     let smallerL U r = U r.smaller </> fun x -> {r with smaller=x}
     let greaterL U r = U r.greater </> fun x -> {r with greater=x}
 
