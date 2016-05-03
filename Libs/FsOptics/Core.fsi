@@ -22,12 +22,12 @@ type Optic<'s,     'a    > = Optic<'s, 's, 'a, 'a>
 
 [<AutoOpen>]
 module Optic =
-  val          view: Optic<'s, 't, 'a,        'b > ->               's -> 'a
+  val          view: Optic<'s,  _, 'a,         _ > ->               's -> 'a
   val          over: Optic<'s, 't, 'a,        'b > -> ('a -> 'b) -> 's -> 't
-  val inline    set: Optic<'s, 't, 'a,        'b > ->        'b  -> 's -> 't
-  val inline remove: Optic<'s, 't, 'a, option<'b>> ->               's -> 't
+  val inline    set: Optic<'s, 't,  _,        'b > ->        'b  -> 's -> 't
+  val inline remove: Optic<'s, 't,  _, option< _>> ->               's -> 't
 
-  val foldOf: Optic<'s, 't, 'a, 'b> -> ('x -> 'a -> 'x) -> 'x -> 's -> 'x
+  val foldOf: Optic<'s, _, 'a, _> -> ('x -> 'a -> 'x) -> 'x -> 's -> 'x
 
   val inline choose: ('s -> Optic<'s, 't, 'a, 'b>) -> Optic<'s, 't, 'a, 'b>
 
