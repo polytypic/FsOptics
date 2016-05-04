@@ -56,7 +56,7 @@ module Optic =
              -> prism: Optic<       's,  option<'a>, 'b,          't>
              ->        Optic<option<'s>, option<'a>, 'b,   option<'t>>
 
-  val ofPrism: prism: Optic<       's,  option<'a>, 'b,         't>
+  val ofPrism: prism: Optic<       's,  option<'a>, 'b,        't>
             ->        Optic<option<'s>, option<'a>, 'b, option<'t>>
 
   val ofTotal: remove:           ('s                        -> option<'t>)
