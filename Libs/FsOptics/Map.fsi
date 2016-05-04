@@ -1,8 +1,8 @@
 namespace FsOptics
 
 module Map =
-  val arrayM: Optic<Map<'ka, 'va>, Map<'kb, 'vb>, array<'ka * 'va>, array<'kb * 'vb>>
+  val arrayM: Optic<Map<'ka, 'va>, array<'ka * 'va>, array<'kb * 'vb>, Map<'kb, 'vb>>
 
-  val valuesT: Optic<Map<'k, 'a>, Map<'k, 'b>, 'a, 'b>
+  val valuesT: Optic<Map<'k, 'a>, 'a, 'b, Map<'k, 'b>>
 
   val valueL: 'k -> Optic<Map<'k, 'v>, option<'v>>

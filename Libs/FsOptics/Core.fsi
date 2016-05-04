@@ -17,49 +17,49 @@ module Update =
               -> 'xs
               -> Update<'ys>
 
-type Optic<'s, 't, 'a, 'b> = ('a -> Update<'b>) -> 's -> Update<'t>
-type Optic<'s,     'a    > = Optic<'s, 's, 'a, 'a>
+type Optic<'s, 'a, 'b, 't> = ('a -> Update<'b>) -> 's -> Update<'t>
+type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
 
 [<AutoOpen>]
 module Optic =
-  val          view: Optic<'s,  _, 'a,         _ > ->               's -> 'a
-  val          over: Optic<'s, 't, 'a,        'b > -> ('a -> 'b) -> 's -> 't
-  val inline    set: Optic<'s, 't,  _,        'b > ->        'b  -> 's -> 't
-  val inline remove: Optic<'s, 't,  _, option< _>> ->               's -> 't
+  val          view: Optic<'s, 'a,         _,   _> ->               's -> 'a
+  val          over: Optic<'s, 'a,        'b,  't> -> ('a -> 'b) -> 's -> 't
+  val inline    set: Optic<'s,  _,        'b,  't> ->        'b  -> 's -> 't
+  val inline remove: Optic<'s,  _, option< _>, 't> ->               's -> 't
 
-  val foldOf: Optic<'s, _, 'a, _> -> ('x -> 'a -> 'x) -> 'x -> 's -> 'x
+  val foldOf: Optic<'s, 'a, _, _> -> ('x -> 'a -> 'x) -> 'x -> 's -> 'x
 
-  val inline choose: ('s -> Optic<'s, 't, 'a, 'b>) -> Optic<'s, 't, 'a, 'b>
+  val inline choose: ('s -> Optic<'s, 'a, 'b, 't>) -> Optic<'s, 'a, 'b, 't>
 
-  val inline normalize: ('s -> 't) -> Optic<'s, 't, 't, 's>
+  val inline normalize: ('s -> 't) -> Optic<'s, 't, 's, 't>
 
   val replace: inn: 'a -> out: 'a -> Optic<'a, 'a> when 'a: equality
 
-  val (<^>): Optic<'s, 's, 'a,      'b     >
-          -> Optic<'s, 't,      'c,      'd>
-          -> Optic<'s, 't, 'a * 'c, 'b * 'd>
+  val (<^>): Optic<'s, 'a,      'b     , 's>
+          -> Optic<'s,      'c,      'd, 't>
+          -> Optic<'s, 'a * 'c, 'b * 'd, 't>
 
-  val (<=>): Optic<'s, 'u, 'a, 'b>
-          -> Optic<'u, 't, 'a, 'b>
-          -> Optic<'s, 't, 'a, 'b>
+  val (<=>): Optic<'s, 'a, 'b, 'u>
+          -> Optic<'u, 'a, 'b, 't>
+          -> Optic<'s, 'a, 'b, 't>
 
   val inline some: ('b -> 't) -> 'a -> (option<'a> -> Update<'b>) -> Update<'t>
   val inline none: ('s -> 't) -> 's -> (option<'a> -> Update<'b>) -> Update<'t>
 
-  val (<|>): Optic<'s, 't, option<'a>, 'b>
-          -> Optic<'s, 't, option<'a>, 'b>
-          -> Optic<'s, 't, option<'a>, 'b>
+  val (<|>): Optic<'s, option<'a>, 'b, 't>
+          -> Optic<'s, option<'a>, 'b, 't>
+          -> Optic<'s, option<'a>, 'b, 't>
 
   val defaults: 's -> Optic<option<'s>, option<'s>> when 's: equality
 
-  val ofPrism': insert:           ('b -> option<'t>)
-             -> prism: Optic<       's,         't,  option<'a>, 'b>
-             ->        Optic<option<'s>, option<'t>, option<'a>, 'b>
+  val ofPrism': insert:                             ('b -> option<'t>)
+             -> prism: Optic<       's,  option<'a>, 'b,          't>
+             ->        Optic<option<'s>, option<'a>, 'b,   option<'t>>
 
-  val ofPrism: prism: Optic<       's,         't,  option<'a>, 'b>
-            ->        Optic<option<'s>, option<'t>, option<'a>, 'b>
+  val ofPrism: prism: Optic<       's,  option<'a>, 'b,         't>
+            ->        Optic<option<'s>, option<'a>, 'b, option<'t>>
 
-  val ofTotal: remove:          ('s -> option<'t>)
-            -> insert:                 ('b -> 't)
-            -> lens: Optic<       's,         't,         'a,         'b>
-            ->       Optic<option<'s>, option<'t>, option<'a>, option<'b>>
+  val ofTotal: remove:           ('s                        -> option<'t>)
+            -> insert:                                   ('b       -> 't)
+            -> lens: Optic<       's,         'a,         'b,         't>
+            ->       Optic<option<'s>, option<'a>, option<'b>, option<'t>>

@@ -1,4 +1,4 @@
 namespace FsOptics
 
 module Option =
-  val valueL: Optic<option<'a>, option<'b>, option<'a>, 'b>
+  val valueL: Optic<option<'a>, option<'a>, 'b, option<'b>>

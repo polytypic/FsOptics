@@ -37,15 +37,15 @@ module Update =
         | View -> i := -1)
     if !i = ys.Length then Over ^ ofArray ys else View
 
-type Optic<'s, 't, 'a, 'b> = ('a -> Update<'b>) -> 's -> Update<'t>
-type Optic<'s, 'a> = Optic<'s, 's, 'a, 'a>
+type Optic<'s, 'a, 'b, 't> = ('a -> Update<'b>) -> 's -> Update<'t>
+type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
 
 [<AutoOpen>]
 module Optic =
   // XXX: This is not currently type safe, because the given optic is not
   // guaranteed to have exactly one focus.  Will need to experiment with various
   // ways to encode that in the types.
-  let view (l: Optic<'s, 't, 'a, 'b>) s =
+  let view (l: Optic<'s, 'a, 'b, 't>) s =
     let r = ref Unchecked.defaultof<_>
     s
     |> l ^ fun a -> r := a; View
@@ -57,14 +57,14 @@ module Optic =
     |> o ^ fun a -> r := f !r a; View
     |> ignore
     !r
-  let over (l: Optic<'s, 't, 'a, 'b>) a2b s =
+  let over (l: Optic<'s, 'a, 'b, 't>) a2b s =
     match l (a2b >> Over) s with
      | Over t -> t
      | _ -> failwith "Impossible"
   let inline set l b s = over l <| constant b <| s
   let inline remove l s = set l None s
 
-  let inline choose (s2l: 's -> Optic<'s, 't, 'a, 'b>) U s = s2l s U s
+  let inline choose (s2l: 's -> Optic<'s, 'a, 'b, 't>) U s = s2l s U s
   let inline normalize x2x U s = U ^ x2x s </> x2x
 
   let rep inn out x = if x = inn then out else x

@@ -3,7 +3,7 @@ namespace FsOptics
 module Map =
   let arrayM U s = U ^ Map.toArray s </> Map.ofArray
 
-  let valuesT : Optic<Map<'k, 'a>, Map<'k, 'b>, 'a, 'b> = fun U ->
+  let valuesT : Optic<Map<'k, 'a>, 'a, 'b, Map<'k, 'b>> = fun U ->
     arrayM << Array.elemsT << item2 <| U
 
   let valueL k U s =

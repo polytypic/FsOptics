@@ -1,4 +1,4 @@
 ﻿namespace FsOptics
 
 module List =
-  val elemsT: Optic<list<'a>, list<'b>, 'a, 'b>
+  val elemsT: Optic<list<'a>, 'a, 'b, list<'b>>
