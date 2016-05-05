@@ -43,8 +43,8 @@ module Optic =
           -> Optic<'u, 'a, 'b, 't>
           -> Optic<'s, 'a, 'b, 't>
 
-  val inline some: ('b -> 't) -> 'a -> (option<'a> -> Update<'b>) -> Update<'t>
-  val inline none: ('b -> 't)       -> (option<'a> -> Update<'b>) -> Update<'t>
+  val inline some: (option<'a> -> Update<'b>) -> ('b -> 't) -> 'a -> Update<'t>
+  val inline none: (option<'a> -> Update<'b>) -> ('b -> 't)       -> Update<'t>
 
   val (<|>): Optic<'s, option<'a>, 'b, 't>
           -> Optic<'s, option<'a>, 'b, 't>

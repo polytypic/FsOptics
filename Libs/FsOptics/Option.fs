@@ -1,5 +1,5 @@
 namespace FsOptics
 
 module Option =
-  let valueL U = function None   -> none Some   U
-                        | Some v -> some Some v U
+  let valueL U = function Some v -> some U Some v
+                        | None   -> none U Some
