@@ -126,3 +126,11 @@ module Example3 =
           << ofPrism ^ Array.indexL 0
           << ofPrism ^ Option.valueL)
     |> printfn "%A"
+
+module Example4 =
+  type Foo<'x> =
+    | Bar of int
+    | Baz of 'x
+
+  let BarL U = function Bar x -> some U Bar x | _ -> none U Bar
+  let BazL U = function Baz x -> some U Baz x | _ -> none U Baz
