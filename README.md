@@ -10,7 +10,7 @@ Here is a Bash script to get started:
 ```sh
 git clone https://github.com/polytypic/FsOptics.git
 cd FsOptics
-./play.sh
+./play
 ```
 
 After a moment of processing, you should be in F# interactive and ready to play.
