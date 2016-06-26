@@ -3,24 +3,32 @@
 type Update
 type Update<'a>
 
-type Optic<'s,'a,'b,'t> = (Update -> 'a -> Update<'b>) -> (Update -> 's -> Update<'t>)
+type Optic<'s,'a,'b,'t> = ('a -> Update -> Update<'b>) -> ('s -> Update -> Update<'t>)
 type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
 
-[<AutoOpen; CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
+[<CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
 module Update =
-  val result: 'a -> Update<'a>
-  val inline (</>): Update<'a> -> ('a -> 'b) -> Update<'b>
   val (<&>):       ('a -> 'b)  -> Update<'a>  -> Update<'b>
   val (<*>): Update<'a -> 'b>  -> Update<'a>  -> Update<'b>
   val (>>=): Update<'a> -> ('a -> Update<'b>) -> Update<'b>
   val (>=>): ('a -> Update<'b>) -> ('b -> Update<'c>) ->  'a -> Update<'c>
+
+[<AutoOpen>]
+module Optic =
+  type Upd<'x> = Update -> Update<'x>
+
+  val result: 'a -> Upd<'a>
+  val inline (<&>):    ('a -> 'b)  -> Upd<'a>  -> Upd<'b>
+  val inline (<*>): Upd<'a -> 'b>  -> Upd<'a>  -> Upd<'b>
+  val inline (>>=): Upd<'a> -> ('a -> Upd<'b>) -> Upd<'b>
+  val inline (>=>): ('a -> Upd<'b>) -> ('b -> Upd<'c>) ->  'a -> Upd<'c>
+  val inline (</>): Upd<'a> -> ('a -> 'b) -> Upd<'b>
+
   val sequenceI: length: ('xs -> int)
               -> iter: (('x -> unit) -> 'xs -> unit)
               -> ofArray: (array<'y> -> 'ys)
               -> Optic<'xs, 'x, 'y, 'ys>
 
-[<AutoOpen>]
-module Optic =
   val          view: Optic<'s, 'a,         _,   _> ->               's -> 'a
   val          over: Optic<'s, 'a,        'b,  't> -> ('a -> 'b) -> 's -> 't
   val inline    set: Optic<'s,  _,        'b,  't> ->        'b  -> 's -> 't
@@ -42,8 +50,8 @@ module Optic =
           -> Optic<'u, 'a, 'b, 't>
           -> Optic<'s, 'a, 'b, 't>
 
-  val inline some: (option<'a> -> Update<'b>) -> ('b -> 't) -> 'a -> Update<'t>
-  val inline none: (option<'a> -> Update<'b>) -> ('b -> 't)       -> Update<'t>
+  val inline some: (option<'a> -> Upd<'b>) -> ('b -> 't) -> 'a -> Upd<'t>
+  val inline none: (option<'a> -> Upd<'b>) -> ('b -> 't)       -> Upd<'t>
 
   val (<|>): Optic<'s, option<'a>, 'b, 't>
           -> Optic<'s, option<'a>, 'b, 't>

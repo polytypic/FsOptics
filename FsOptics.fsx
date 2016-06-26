@@ -11,12 +11,12 @@ open FsOptics
 module Example1 =
   type Text =
     {language: string; text: string}
-    static member languageL U u r = U u r.language </> fun x -> {r with language=x}
-    static member     textL U u r = U u r.text     </> fun x -> {r with     text=x}
+    static member languageL U r = U r.language </> fun x -> {r with language=x}
+    static member     textL U r = U r.text     </> fun x -> {r with     text=x}
 
   type Data =
     {contents: array<Text>}
-    static member contentsL U u r = U u r.contents </> fun x -> {r with contents=x}
+    static member contentsL U r = U r.contents </> fun x -> {r with contents=x}
 
   let textIn language =
        Data.contentsL
@@ -61,20 +61,20 @@ module Example2 =
   and BST<'k, 'v> = option<Node<'k, 'v>>
 
   module Node =
-    let     keyL U u r = U u r.key     </> fun x -> {r with     key=x}
-    let   valueL U u r = U u r.value   </> fun x -> {r with   value=x}
-    let smallerL U u r = U u r.smaller </> fun x -> {r with smaller=x}
-    let greaterL U u r = U u r.greater </> fun x -> {r with greater=x}
+    let     keyL U r = U r.key     </> fun x -> {r with     key=x}
+    let   valueL U r = U r.value   </> fun x -> {r with   value=x}
+    let smallerL U r = U r.smaller </> fun x -> {r with smaller=x}
+    let greaterL U r = U r.greater </> fun x -> {r with greater=x}
 
   module BST =
-    let rec valuesT U u = function
+    let rec valuesT U = function
       | None -> result None
       | Some node ->
             fun value smaller greater ->
               Some {key=node.key; value=value; smaller=smaller; greater=greater}
-        <&> U u node.value
-        <*> valuesT U u node.smaller
-        <*> valuesT U u node.greater
+        <&> U node.value
+        <*> valuesT U node.smaller
+        <*> valuesT U node.greater
 
     let rec nodeL key =
       choose ^ function
@@ -120,14 +120,14 @@ module Example22 =
     | Empty
 
   module BST =
-    let rec valuesT U u = function
+    let rec valuesT U = function
       | Empty -> result Empty
       | Branch (key, value, smaller, greater) ->
             fun value smaller greater ->
               Branch (key, value, smaller, greater)
-        <&> U u value
-        <*> valuesT U u smaller
-        <*> valuesT U u greater
+        <&> U value
+        <*> valuesT U smaller
+        <*> valuesT U greater
 
     let toOption = function
       | Branch (k, v, s, g) -> Some (k, v, s, g)
@@ -136,8 +136,8 @@ module Example22 =
       | Some (k, v, s, g) -> Branch (k, v, s, g)
       | None              -> Empty
 
-    let toOptionM U u x = U u ^ toOption x </> ofOption
-    let ofOptionM U u x = U u ^ ofOption x </> toOption
+    let toOptionM U x = U ^ toOption x </> ofOption
+    let ofOptionM U x = U ^ ofOption x </> toOption
 
     let rec nodeL key =
       choose ^ function
@@ -199,8 +199,8 @@ module Example4 =
     | Bar of int * string
     | Baz of 'x
 
-  let BarL U u = function Bar (x, y) -> some (U u) Bar (x, y) | _ -> none (U u) Bar
-  let BazL U u = function Baz x      -> some (U u) Baz x      | _ -> none (U u) Baz
+  let BarL U = function Bar (x, y) -> some U Bar (x, y) | _ -> none U Bar
+  let BazL U = function Baz x      -> some U Baz x      | _ -> none U Baz
 
   let run () =
     Baz 10
