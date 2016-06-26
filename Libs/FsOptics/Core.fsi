@@ -1,8 +1,12 @@
 ﻿namespace FsOptics
 
+type Update
 type Update<'a>
 
-[<AutoOpen>]
+type Optic<'s,'a,'b,'t> = (Update -> 'a -> Update<'b>) -> (Update -> 's -> Update<'t>)
+type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
+
+[<AutoOpen; CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
 module Update =
   val result: 'a -> Update<'a>
   val inline (</>): Update<'a> -> ('a -> 'b) -> Update<'b>
@@ -13,12 +17,7 @@ module Update =
   val sequenceI: length: ('xs -> int)
               -> iter: (('x -> unit) -> 'xs -> unit)
               -> ofArray: (array<'y> -> 'ys)
-              -> ('x -> Update<'y>)
-              -> 'xs
-              -> Update<'ys>
-
-type Optic<'s, 'a, 'b, 't> = ('a -> Update<'b>) -> 's -> Update<'t>
-type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
+              -> Optic<'xs, 'x, 'y, 'ys>
 
 [<AutoOpen>]
 module Optic =

@@ -3,13 +3,13 @@
 module Array =
   let elemsT U = sequenceI Array.length Array.iter id U
 
-  let appendL U (xs: 'a []) =
-    U (None: option<'a>) </> fun xO -> Array.append xs ^ Option.toArray xO
+  let appendL U (u: Update) (xs: 'a []) =
+    U u (None: option<'a>) </> fun xO -> Array.append xs ^ Option.toArray xO
 
-  let indexL i U xs =
+  let indexL i U (u: Update) xs =
     if i < 0 then failwithf "Invalid index: %d" i
     let n = Array.length xs
-    U ^ if i < n then Some xs.[i] else None
+    U u ^ if i < n then Some xs.[i] else None
     </> fun xO ->
           if i <= n then
             [| Array.sub xs 0 i
