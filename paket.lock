@@ -2,5 +2,4 @@ REDIRECTS: ON
 FRAMEWORK: >= NET45
 NUGET
   remote: https://www.nuget.org/api/v2
-  specs:
     FSharp.Core (4.0.0.1)
