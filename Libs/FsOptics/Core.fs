@@ -10,19 +10,19 @@ type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
 module Update =
   let (<&>) a2b = function
     | Over a -> Over ^ a2b a
-    | View -> View
+    | View   -> View
   let (<*>) a2bA aA =
     match a2bA with
      | Over a2b -> a2b <&> aA
-     | View -> View
+     | View     -> View
   // XXX: It seems that by making update into a monad, it becomes easy to
   // compose traversals.  It is not yet clear whether this is really a good
   // idea.
   let (>>=) aA a2bA =
     match aA with
      | Over a -> a2bA a
-     | View -> View
-  let (>=>) a2bA b2cA a = a2bA a >>= b2cA
+     | View   -> View
+  let inline (>=>) a2bA b2cA a = a2bA a >>= b2cA
 
 [<AutoOpen>]
 module Optic =
@@ -34,27 +34,27 @@ module Optic =
   let inline (</>) u2aU a2b (u: Update) = a2b <&> u2aU u
   let inline (<&>) a2b u2aU (u: Update) = a2b <&> u2aU u
   let inline (<*>) u2a2bU u2aU (u: Update) = u2a2bU u <*> u2aU u
-  let inline (>>=) u2aU a2u2bU (u: Update) = u2aU u >>= fun a -> a2u2bU a u
+  let inline (>>=) u2aU a2u2bU (u: Update) = u2aU u >>= flip a2u2bU u
   let inline (>=>) a2bA b2cA a = a2bA a >>= b2cA
 
-  let sequenceI length iter ofArray x2u2yF xs (u: Update) =
-    let ys = Array.zeroCreate ^ length xs
-    let i = ref 0
-    xs
-    |> iter ^ fun x ->
-        match x2u2yF x u with
-        | Over y ->
-          match ys with
-           | null -> ()
-           | ys ->
-             let j = !i
-             if 0 <= j then
-               ys.[j] <- y
-               i := j + 1
-        | View -> ()
-    match u with
-     | O -> Over ^ ofArray ys
-     | V -> View
+  let sequenceI length iter ofArray x2u2yF xs = function
+    | V ->
+      xs
+      |> iter (flip x2u2yF V >> ignore)
+      View
+    | O ->
+      let ys = Array.zeroCreate ^ length xs
+      let i = ref 0
+      xs
+      |> iter ^ fun x ->
+           match x2u2yF x O with
+            | Over y ->
+              let j = !i
+              ys.[j] <- y
+              i := j + 1
+            | View ->
+              failwith "Bug"
+      Over ^ ofArray ys
 
   // XXX: This is not currently type safe, because the given optic is not
   // guaranteed to have exactly one focus.  Will need to experiment with various
@@ -72,14 +72,14 @@ module Optic =
   let over (l: Optic<'s, 'a, 'b, 't>) a2b s =
     match l (fun a _ -> Over ^ a2b a) s O with
      | Over t -> t
-     | _ -> failwith "Impossible"
+     | _ -> failwith "Bug"
   let inline set l b s = over l <| constant b <| s
   let inline remove l s = set l None s
 
   let inline choose (s2l: 's -> Optic<'s, 'a, 'b, 't>) U s = s2l s U s
   let inline normalize x2x U s = U ^ x2x s </> x2x
 
-  let rep inn out x = if x = inn then out else x
+  let inline rep inn out x = if x = inn then out else x
   let replace inn out U s = U ^ rep inn out s </> rep out inn
 
   let (<^>) sa sb U s =
@@ -87,8 +87,8 @@ module Optic =
 
   let (<=>) (a: Optic<_,_,_,_>) b U = a U >=> b U
 
+  let inline none U C   = U   None   </> C
   let inline some U C a = U ^ Some a </> C
-  let inline none U C   = U ^ None   </> C
 
   let (<|>) aP bP =
     choose ^ fun s -> if Option.isSome ^ view aP s then aP else bP
@@ -96,12 +96,12 @@ module Optic =
   let defaults out = replace None ^ Some out
 
   let ofPrism' b2tO l U = function
-    | None -> U None </> b2tO
+    | None   -> U   None     </> b2tO
     | Some s -> U ^ view l s </> (s |> flip ^ set l >> Some)
 
   let ofPrism l = ofPrism' <| constant None <| l
 
   let ofTotal s2tO b2t l U = function
-    | None -> U None </> Option.map b2t
-    | Some s -> U (Some ^ view l s)
-            </> function None -> s2tO s | Some b -> set l b s |> Some
+    | None   -> U   None            </> Option.map b2t
+    | Some s -> U ^ Some ^ view l s </> function None   -> s2tO s
+                                               | Some b -> set l b s |> Some

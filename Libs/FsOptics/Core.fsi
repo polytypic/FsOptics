@@ -11,7 +11,7 @@ module Update =
   val (<&>):       ('a -> 'b)  -> Update<'a>  -> Update<'b>
   val (<*>): Update<'a -> 'b>  -> Update<'a>  -> Update<'b>
   val (>>=): Update<'a> -> ('a -> Update<'b>) -> Update<'b>
-  val (>=>): ('a -> Update<'b>) -> ('b -> Update<'c>) ->  'a -> Update<'c>
+  val inline (>=>): ('a -> Update<'b>) -> ('b -> Update<'c>) -> 'a -> Update<'c>
 
 [<AutoOpen>]
 module Optic =
@@ -21,7 +21,7 @@ module Optic =
   val inline (<&>):    ('a -> 'b)  -> Upd<'a>  -> Upd<'b>
   val inline (<*>): Upd<'a -> 'b>  -> Upd<'a>  -> Upd<'b>
   val inline (>>=): Upd<'a> -> ('a -> Upd<'b>) -> Upd<'b>
-  val inline (>=>): ('a -> Upd<'b>) -> ('b -> Upd<'c>) ->  'a -> Upd<'c>
+  val inline (>=>): ('a -> Upd<'b>) -> ('b -> Upd<'c>) -> 'a -> Upd<'c>
   val inline (</>): Upd<'a> -> ('a -> 'b) -> Upd<'b>
 
   val sequenceI: length: ('xs -> int)
@@ -50,8 +50,8 @@ module Optic =
           -> Optic<'u, 'a, 'b, 't>
           -> Optic<'s, 'a, 'b, 't>
 
-  val inline some: (option<'a> -> Upd<'b>) -> ('b -> 't) -> 'a -> Upd<'t>
   val inline none: (option<'a> -> Upd<'b>) -> ('b -> 't)       -> Upd<'t>
+  val inline some: (option<'a> -> Upd<'b>) -> ('b -> 't) -> 'a -> Upd<'t>
 
   val (<|>): Optic<'s, option<'a>, 'b, 't>
           -> Optic<'s, option<'a>, 'b, 't>
