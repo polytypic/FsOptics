@@ -6,8 +6,7 @@ type Update<'a> = Over of 'a | View
 type Optic<'s,'a,'b,'t> = ('a -> Update -> Update<'b>) -> ('s -> Update -> Update<'t>)
 type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
 
-[<CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
-module Update =
+module Internal =
   let (<&>) a2b = function
     | Over a -> Over ^ a2b a
     | View   -> View
@@ -22,11 +21,10 @@ module Update =
     match aA with
      | Over a -> a2bA a
      | View   -> View
-  let inline (>=>) a2bA b2cA a = a2bA a >>= b2cA
 
 [<AutoOpen>]
 module Optic =
-  open Update
+  open Internal
 
   type Upd<'x> = Update -> Update<'x>
 

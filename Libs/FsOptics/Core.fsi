@@ -6,12 +6,10 @@ type Update<'a>
 type Optic<'s,'a,'b,'t> = ('a -> Update -> Update<'b>) -> ('s -> Update -> Update<'t>)
 type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
 
-[<CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
-module Update =
+module Internal =
   val (<&>):       ('a -> 'b)  -> Update<'a>  -> Update<'b>
   val (<*>): Update<'a -> 'b>  -> Update<'a>  -> Update<'b>
   val (>>=): Update<'a> -> ('a -> Update<'b>) -> Update<'b>
-  val inline (>=>): ('a -> Update<'b>) -> ('b -> Update<'c>) -> 'a -> Update<'c>
 
 [<AutoOpen>]
 module Optic =
