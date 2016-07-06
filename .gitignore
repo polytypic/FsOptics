@@ -3,6 +3,7 @@
 *.userprefs
 *~
 .\#*
+.gh-pages
 .paket/paket.exe
 \#*\#
 bin

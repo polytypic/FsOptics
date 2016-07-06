@@ -1,10 +1,12 @@
 ﻿namespace FsOptics
 
 module Array =
-  let elemsT U = sequenceI Array.length Array.iter id U
+  let valuesT U = sequenceI Array.length Array.iter id U
 
   let appendL U (xs: 'a []) =
-    U (None: option<'a>) </> fun xO -> Array.append xs ^ Option.toArray xO
+    U (None: option<'a>) </> fun xO -> Array.append <| xs <| Option.toArray xO
+  let prependL U (xs: 'a []) =
+    U (None: option<'a>) </> fun xO -> Array.append <| Option.toArray xO <| xs
 
   let indexL i U xs =
     if i < 0 then failwithf "Invalid index: %d" i

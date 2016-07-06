@@ -185,7 +185,7 @@ module Example3 =
   let run () =
     (((1, "a", false), (2, "b", true)), [(3, 1.0); (15, 2.0)])
     |> set ((item1 << (item1 <=> item2) << item1) <=>
-            (item2 << List.elemsT << item1)) "lol"
+            (item2 << List.valuesT << item1)) "lol"
     |> printfn "%A"
 
     Choice2Of3 [|Some "a"|]

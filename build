@@ -29,3 +29,12 @@ done
 for TEMPLATE in *.paket.template ; do
   $RUN $PAKET pack output . templatefile $TEMPLATE
 done
+
+if [ -d .gh-pages ] ; then
+  ./FsiRefGen/run --out .gh-pages --name FsOptics -- \
+    Libs/FsOptics/Core.fsi   \
+    Libs/FsOptics/Array.fsi  \
+    Libs/FsOptics/List.fsi   \
+    Libs/FsOptics/Map.fsi    \
+    Libs/FsOptics/Option.fsi
+fi

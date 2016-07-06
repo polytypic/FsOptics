@@ -1,4 +1,27 @@
 ﻿namespace FsOptics
 
 module List =
-  let elemsT U = sequenceI List.length List.iter List.ofArray U
+  let valuesT U = sequenceI List.length List.iter List.ofArray U
+
+  let appendL U (xs: list<'a>) =
+    U (None: option<'a>) </> fun xO -> xs @ Option.toList xO
+  let prependL U (xs: list<'a>) =
+    U (None: option<'a>) </> fun xO -> Option.toList xO @ xs
+
+  let indexL i U xs =
+    if i < 0 then failwithf "Invalid index: %d" i
+    let n = List.length xs
+    U ^ if i < n then Some xs.[i] else None
+    </> fun xO ->
+          if i <= n then
+            [| List.take i xs
+               Option.toList xO
+               List.skip <| i+1 <| xs |] |> List.concat
+          else
+            xs
+
+  let inline findL p =
+       List.tryFindIndex p
+    >> Option.map indexL
+    >> Option.getOr appendL
+    |> choose

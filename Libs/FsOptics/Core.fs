@@ -1,11 +1,9 @@
 ﻿namespace FsOptics
 
-type Update = O | V
-type Update<'a> = Over of 'a | View
+type Internal = O | V
+type Internal<'a> = Over of 'a | View
 
-type Optic<'s,'a,'b,'t> = ('a -> Update -> Update<'b>) -> ('s -> Update -> Update<'t>)
-type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
-
+[<CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
 module Internal =
   let (<&>) a2b = function
     | Over a -> Over ^ a2b a
@@ -22,17 +20,20 @@ module Internal =
      | Over a -> a2bA a
      | View   -> View
 
+type Optic<'s,'a,'b,'t> = ('a -> Internal -> Internal<'b>) -> ('s -> Internal -> Internal<'t>)
+type Optic<'s, 'a> = Optic<'s, 'a, 'a, 's>
+
 [<AutoOpen>]
 module Optic =
   open Internal
 
-  type Upd<'x> = Update -> Update<'x>
+  type Update<'x> = Internal -> Internal<'x>
 
   let result x = function O -> Over x | V -> View
-  let inline (</>) u2aU a2b (u: Update) = a2b <&> u2aU u
-  let inline (<&>) a2b u2aU (u: Update) = a2b <&> u2aU u
-  let inline (<*>) u2a2bU u2aU (u: Update) = u2a2bU u <*> u2aU u
-  let inline (>>=) u2aU a2u2bU (u: Update) = u2aU u >>= flip a2u2bU u
+  let inline (</>) u2aU a2b (u: Internal) = a2b <&> u2aU u
+  let inline (<&>) a2b u2aU (u: Internal) = a2b <&> u2aU u
+  let inline (<*>) u2a2bU u2aU (u: Internal) = u2a2bU u <*> u2aU u
+  let inline (>>=) u2aU a2u2bU (u: Internal) = u2aU u >>= flip a2u2bU u
   let inline (>=>) a2bA b2cA a = a2bA a >>= b2cA
 
   let sequenceI length iter ofArray x2u2yF xs = function

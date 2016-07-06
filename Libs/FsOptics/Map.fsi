@@ -5,4 +5,4 @@ module Map =
 
   val valuesT: Optic<Map<'k, 'a>, 'a, 'b, Map<'k, 'b>>
 
-  val valueL: 'k -> Optic<Map<'k, 'v>, option<'v>>
+  val indexL: 'k -> Optic<Map<'k, 'v>, option<'v>>
