@@ -27,10 +27,10 @@ module Optic =
               -> ofArray: (array<'y> -> 'ys)
               -> Optic<'xs, 'x, 'y, 'ys>
 
-  val          view: Optic<'s, 'a,         _,   _> ->               's -> 'a
-  val          over: Optic<'s, 'a,        'b,  't> -> ('a -> 'b) -> 's -> 't
-  val inline    set: Optic<'s,  _,        'b,  't> ->        'b  -> 's -> 't
-  val inline remove: Optic<'s,  _, option< _>, 't> ->               's -> 't
+  val          view: Optic<'s, 'a,         _,  _> ->               's -> 'a
+  val          over: Optic<'s, 'a,        'b, 't> -> ('a -> 'b) -> 's -> 't
+  val inline    set: Optic<'s,  _,        'b, 't> ->        'b  -> 's -> 't
+  val inline remove: Optic<'s,  _, option<_>, 't> ->               's -> 't
 
   val foldOf: Optic<'s, 'a, _, _> -> ('x -> 'a -> 'x) -> 'x -> 's -> 'x
 
