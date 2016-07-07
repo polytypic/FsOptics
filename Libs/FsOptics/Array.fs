@@ -3,6 +3,8 @@
 module Array =
   let valuesT U = sequenceI Array.length Array.iter id U
 
+  let atL i U xs = U ^ Array.get xs i </> Array.replace xs i
+
   let inline insertL op U (xs: 'a []) =
     U (None: option<'a>) </> fun xO -> op xs ^ Option.toArray xO
   let  appendL U = insertL       Array.append  U

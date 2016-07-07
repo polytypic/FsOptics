@@ -7,6 +7,12 @@ module internal Util =
   let inline flip f y x = f x y
   let inline constant x _ = x
 
+  module Array =
+    let replace xs i y =
+      let ys = Array.copy xs
+      ys.[i] <- y
+      ys
+
   module List =
     let revSplitAt i xs =
       if i < 0 then failwith "Negative index"
