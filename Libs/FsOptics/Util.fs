@@ -12,13 +12,13 @@ module internal Util =
 
   module List =
     let revSplitAt i xs =
-      if i < 0 then invalidOp "Negative index"
+      if i < 0 then failwith "Negative index"
       let rec lp i ys xs =
         if i <= 0 then
           (ys, xs)
         else
           match xs with
-           | [] -> invalidOp "Index too hight"
+           | [] -> failwith "Index too high"
            | y::xs -> lp (i-1) (y::ys) xs
       lp i [] xs
 
