@@ -7,9 +7,6 @@ module internal Util =
   let inline flip f y x = f x y
   let inline constant x _ = x
 
-  module Option =
-    let inline getOr x = function None -> x | Some x -> x
-
   module List =
     let revSplitAt i xs =
       if i < 0 then failwith "Negative index"
@@ -23,3 +20,6 @@ module internal Util =
       lp i [] xs
 
     let revAppend ys xs = List.fold (fun xs y -> y::xs) xs ys
+
+  module Option =
+    let inline getOr x = function None -> x | Some x -> x
