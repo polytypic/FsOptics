@@ -9,16 +9,14 @@ module Array =
   let prependL U = insertL (flip Array.append) U
 
   let indexL i U xs =
-    if i < 0 then failwithf "Invalid index: %d" i
     let n = Array.length xs
-    U ^ if i < n then Some xs.[i] else None
-    </> fun xO ->
-          if i <= n then
-            [| Array.sub xs 0 i
-               Option.toArray xO
-               Array.sub xs <| i+1 <| n-(i+1) |] |> Array.concat
-          else
-            xs
+    if i < 0 || n < i then failwithf "Invalid index: %d" i
+    if i = n
+    then U None </> (Option.toArray >> Array.append xs)
+    else U ^ Some xs.[i] </> fun xO ->
+         [| Array.sub xs 0 i
+            Option.toArray xO
+            Array.sub xs <| i+1 <| n-(i+1) |] |> Array.concat
 
   let inline findL p =
        Array.tryFindIndex p
