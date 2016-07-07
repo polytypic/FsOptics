@@ -3,10 +3,10 @@
 module List =
   let valuesT U = sequenceI List.length List.iter List.ofArray U
 
-  let appendL U (xs: list<'a>) =
-    U (None: option<'a>) </> fun xO -> xs @ Option.toList xO
-  let prependL U (xs: list<'a>) =
-    U (None: option<'a>) </> fun xO -> Option.toList xO @ xs
+  let inline insertL op U (xs: list<'a>) =
+    U (None: option<'a>) </> fun xO -> op xs ^ Option.toList xO
+  let  appendL U = insertL       (@)  U
+  let prependL U = insertL (flip (@)) U
 
   let indexL i U xs =
     if i < 0 then failwithf "Invalid index: %d" i
