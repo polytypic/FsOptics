@@ -8,17 +8,9 @@ module List =
   let  appendL U = insertL       (@)  U
   let prependL U = insertL (flip (@)) U
 
-  let indexL i U xs =
-    if i < 0 then failwithf "Invalid index: %d" i
-    let n = List.length xs
-    U ^ if i < n then Some xs.[i] else None
-    </> fun xO ->
-          if i <= n then
-            [| List.take i xs
-               Option.toList xO
-               List.skip <| i+1 <| xs |] |> List.concat
-          else
-            xs
+  let indexL i U = List.revSplitAt i >> function
+    | (ys, [])    -> U   None   </> fun xO -> List.revAppend ys (Option.toList xO)
+    | (ys, x::xs) -> U ^ Some x </> fun xO -> List.revAppend ys (Option.toList xO @ xs)
 
   let inline findL p =
        List.tryFindIndex p
