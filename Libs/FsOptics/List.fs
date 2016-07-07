@@ -3,6 +3,10 @@
 module List =
   let valuesT U = sequenceI List.length List.iter List.ofArray U
 
+  let atL i U = List.revSplitAt i >> function
+    | (ys, x::xs) -> U x </> fun x -> List.revAppend ys (x::xs)
+    | (_, _) -> failwithf "Invalid index: %d" i
+
   let inline insertL op U (xs: list<'a>) =
     U (None: option<'a>) </> fun xO -> op xs ^ Option.toList xO
   let  appendL U = insertL       (@)  U
